@@ -82,7 +82,7 @@ class _TableFormState extends State<TableForm> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> fields;
+    List<CardSettingsWidget> fields;
     switch (_defaultValues) {
       case true:
         fields = _buildFields(defaults: true);
@@ -91,19 +91,24 @@ class _TableFormState extends State<TableForm> {
         fields = _buildFields();
     }
     return _ready
-        ? CardSettings(
-            children: <Widget>[
-              CardSettingsHeader(label: formLabel),
-              ...fields,
-              CardSettingsButton(
-                  label: "Save", onPressed: () => _saveForm(context))
-            ],
-          )
+        ? CardSettings(children: <CardSettingsSection>[
+            CardSettingsSection(
+              header: CardSettingsHeader(
+                label: 'Favorite Book',
+              ),
+              children: <CardSettingsWidget>[
+                CardSettingsHeader(label: formLabel),
+                ...fields,
+                CardSettingsButton(
+                    label: "Save", onPressed: () => _saveForm(context))
+              ],
+            ),
+          ])
         : const Center(child: CircularProgressIndicator());
   }
 
-  List<Widget> _buildFields({bool defaults = false}) {
-    final fields = <Widget>[];
+  List<CardSettingsWidget> _buildFields({bool defaults = false}) {
+    final fields = <CardSettingsWidget>[];
     schema.columns.forEach((DbColumn column) {
       var label = column.name;
       if (autoLabel) label = _autoLabel(column.name);
